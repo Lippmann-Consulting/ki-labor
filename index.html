@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Labor — Interaktive Lernumgebung</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="lab-nav">
+    <div class="nav-brand">🧪 KI-Labor</div>
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="context">
+            <span class="tab-icon">🧠</span>
+            <span class="tab-label">Der Kopf</span>
+            <span class="tab-sub">Kontextfenster</span>
+        </button>
+        <button class="nav-tab" data-tab="multimodal">
+            <span class="tab-icon">👁️</span>
+            <span class="tab-label">Die Sinne</span>
+            <span class="tab-sub">Multimodal</span>
+        </button>
+        <button class="nav-tab" data-tab="memory">
+            <span class="tab-icon">💾</span>
+            <span class="tab-label">Das Gedächtnis</span>
+            <span class="tab-sub">Context vs. Memory</span>
+        </button>
+        <button class="nav-tab locked" data-tab="apis">
+            <span class="tab-icon">🦾</span>
+            <span class="tab-label">Die Arme</span>
+            <span class="tab-sub">APIs & Tools</span>
+        </button>
+        <button class="nav-tab locked" data-tab="mcp">
+            <span class="tab-icon">🔌</span>
+            <span class="tab-label">Das Nervensystem</span>
+            <span class="tab-sub">MCP & Skills</span>
+        </button>
+    </div>
+</nav>
+
+<!-- ============================================ -->
+<!-- TAB 1: DER KOPF — Kontextfenster            -->
+<!-- ============================================ -->
+<section class="tab-content active" id="tab-context">
+    <div class="section-header">
+        <h1>Der Kopf der KI</h1>
+        <p class="section-intro">Jede KI hat einen begrenzten Arbeitsspeicher — das <strong>Kontextfenster</strong>. Alles was ihr schreibt, alles was die KI antwortet, und alles was ihr hochladet — muss dort hineinpassen.</p>
+    </div>
+
+    <!-- Model Selector -->
+    <div class="model-selector">
+        <h3>Wähle ein Modell:</h3>
+        <div class="model-buttons">
+            <button class="model-btn active" data-model="gpt41" data-tokens="1000000" data-color="#10a37f">
+                <span class="model-name">GPT-4.1</span>
+                <span class="model-detail">1M (API) / 272K (Plus)</span>
+            </button>
+            <button class="model-btn" data-model="copilot" data-tokens="128000" data-color="#0078d4">
+                <span class="model-name">Copilot</span>
+                <span class="model-detail">128K Tokens</span>
+            </button>
+            <button class="model-btn" data-model="claude" data-tokens="200000" data-color="#d97706">
+                <span class="model-name">Claude Opus 4.6</span>
+                <span class="model-detail">200K / 1M Beta</span>
+            </button>
+            <button class="model-btn" data-model="gemini" data-tokens="2000000" data-color="#4285f4">
+                <span class="model-name">Gemini 2.5 Pro</span>
+                <span class="model-detail">1M–2M Tokens</span>
+            </button>
+            <button class="model-btn" data-model="deepseek" data-tokens="128000" data-color="#5b6abf">
+                <span class="model-name">DeepSeek V3</span>
+                <span class="model-detail">128K Tokens</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Context Bucket -->
+    <div class="bucket-area">
+        <div class="bucket-container">
+            <div class="bucket">
+                <div class="bucket-label">Kontextfenster</div>
+                <div class="bucket-fill" id="bucketFill">
+                    <div class="bucket-segment system-prompt" id="segSystem" title="System Prompt">
+                        <span>System Prompt</span>
+                    </div>
+                    <div class="bucket-segment user-input" id="segUser" title="Deine Eingabe">
+                        <span>Deine Eingabe</span>
+                    </div>
+                    <div class="bucket-segment ai-response" id="segResponse" title="KI-Antwort">
+                        <span>KI-Antwort</span>
+                    </div>
+                    <div class="bucket-segment knowledge" id="segKnowledge" title="Knowledge / Dateien">
+                        <span>Knowledge</span>
+                    </div>
+                </div>
+                <div class="bucket-empty" id="bucketEmpty">
+                    <span>Freier Platz</span>
+                </div>
+                <div class="bucket-capacity" id="bucketCapacity">128.000 Tokens</div>
+            </div>
+            <div class="bucket-stats">
+                <div class="stat">
+                    <span class="stat-label">Belegt:</span>
+                    <span class="stat-value" id="statUsed">0</span>
+                    <span class="stat-unit">Tokens</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Frei:</span>
+                    <span class="stat-value" id="statFree">128.000</span>
+                    <span class="stat-unit">Tokens</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Auslastung:</span>
+                    <span class="stat-value" id="statPercent">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Controls -->
+        <div class="bucket-controls">
+            <h3>Fülle den Kopf:</h3>
+
+            <div class="control-group">
+                <label>System Prompt</label>
+                <input type="range" id="sliderSystem" min="0" max="5000" value="500" step="100">
+                <span class="range-value" id="valSystem">500 Tokens</span>
+                <div class="control-hint">Anweisungen an den Agenten ("Du bist ein freundlicher Assistent...")</div>
+            </div>
+
+            <div class="control-group">
+                <label>Knowledge / Dateien</label>
+                <input type="range" id="sliderKnowledge" min="0" max="100000" value="0" step="1000">
+                <span class="range-value" id="valKnowledge">0 Tokens</span>
+                <div class="control-hint">Hochgeladene PDFs, Texte, Tabellen</div>
+            </div>
+
+            <div class="control-group">
+                <label>Bisheriger Chat-Verlauf</label>
+                <input type="range" id="sliderHistory" min="0" max="100000" value="0" step="1000">
+                <span class="range-value" id="valHistory">0 Tokens</span>
+                <div class="control-hint">Alle bisherigen Nachrichten in dieser Sitzung</div>
+            </div>
+
+            <div class="control-group">
+                <label>Deine aktuelle Nachricht</label>
+                <input type="range" id="sliderUser" min="0" max="10000" value="100" step="50">
+                <span class="range-value" id="valUser">100 Tokens</span>
+                <div class="control-hint">Das was du gerade schreibst</div>
+            </div>
+
+            <button class="btn-reset" id="btnResetBucket">Zurücksetzen</button>
+        </div>
+    </div>
+
+    <!-- Token Explainer -->
+    <div class="token-explainer">
+        <h3>Was ist ein Token?</h3>
+        <div class="token-demo">
+            <div class="token-input">
+                <textarea id="tokenInput" placeholder="Schreibe hier etwas...">Künstliche Intelligenz verändert die Arbeitswelt.</textarea>
+            </div>
+            <div class="token-output">
+                <div class="token-chips" id="tokenChips"></div>
+                <div class="token-count">
+                    <span id="tokenCount">0</span> Tokens ≈ <span id="wordCount">0</span> Wörter
+                </div>
+            </div>
+        </div>
+        <div class="token-facts">
+            <div class="fact">
+                <span class="fact-icon">🇩🇪</span>
+                <span>Deutsch braucht <strong>~30% mehr Tokens</strong> als Englisch</span>
+            </div>
+            <div class="fact">
+                <span class="fact-icon">📐</span>
+                <span>1 Token ≈ 0,75 Wörter (EN) / ≈ 0,5 Wörter (DE)</span>
+            </div>
+            <div class="fact">
+                <span class="fact-icon">💰</span>
+                <span>Mehr Tokens = höhere Kosten + schneller am Limit</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline-section">
+        <h3>Die Entwicklung des Kontextfensters</h3>
+        <div class="timeline">
+            <div class="timeline-entry" data-year="2022">
+                <div class="timeline-year">2022</div>
+                <div class="timeline-bar" style="width: 2%"></div>
+                <div class="timeline-info">
+                    <strong>GPT-3.5</strong> — 4K Tokens
+                    <span class="timeline-analog">≈ 3 Seiten Text</span>
+                </div>
+            </div>
+            <div class="timeline-entry" data-year="2023">
+                <div class="timeline-year">2023</div>
+                <div class="timeline-bar" style="width: 8%"></div>
+                <div class="timeline-info">
+                    <strong>GPT-4</strong> — 32K Tokens
+                    <span class="timeline-analog">≈ 25 Seiten</span>
+                </div>
+            </div>
+            <div class="timeline-entry" data-year="2023b">
+                <div class="timeline-year">2023</div>
+                <div class="timeline-bar" style="width: 13%"></div>
+                <div class="timeline-info">
+                    <strong>Claude 2</strong> — 100K Tokens
+                    <span class="timeline-analog">≈ ein kurzes Buch</span>
+                </div>
+            </div>
+            <div class="timeline-entry" data-year="2024">
+                <div class="timeline-year">2024</div>
+                <div class="timeline-bar" style="width: 16%"></div>
+                <div class="timeline-info">
+                    <strong>GPT-4o / Claude 3</strong> — 128–200K
+                    <span class="timeline-analog">≈ ein Buch</span>
+                </div>
+            </div>
+            <div class="timeline-entry" data-year="2024b">
+                <div class="timeline-year">2024</div>
+                <div class="timeline-bar" style="width: 50%"></div>
+                <div class="timeline-info">
+                    <strong>Gemini 1.5</strong> — 1M Tokens
+                    <span class="timeline-analog">≈ 8 Bücher</span>
+                </div>
+            </div>
+            <div class="timeline-entry" data-year="2025">
+                <div class="timeline-year">2025</div>
+                <div class="timeline-bar" style="width: 50%"></div>
+                <div class="timeline-info">
+                    <strong>Gemini 2.0 / Claude Sonnet 4</strong> — 1M–2M / 200K
+                    <span class="timeline-analog">≈ 8–15 Bücher (Gemini) / ≈ 1 Buch (Claude)</span>
+                </div>
+            </div>
+            <div class="timeline-entry highlight" data-year="2026">
+                <div class="timeline-year">2026</div>
+                <div class="timeline-bar" style="width: 100%"></div>
+                <div class="timeline-info">
+                    <strong>GPT-4.1 / Gemini 2.5 Pro / Claude Opus 4.6</strong>
+                    <span class="timeline-analog">Bis zu 2M Tokens — GPT-4.1 erstmals 1M via API!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- TAB 2: DIE SINNE — Multimodal               -->
+<!-- ============================================ -->
+<section class="tab-content" id="tab-multimodal">
+    <div class="section-header">
+        <h1>Die Sinne der KI</h1>
+        <p class="section-intro">Moderne KI kann nicht nur Text — sie versteht Bilder, liest PDFs und hört Sprache. Aber: <strong>Alles wird zu Tokens</strong>. Und alles kostet Platz im Kontextfenster.</p>
+    </div>
+
+    <!-- Multimodal Token Cost -->
+    <div class="multimodal-cost">
+        <h3>Was kostet wie viel Kontext?</h3>
+        <div class="cost-grid">
+            <div class="cost-card" data-type="text">
+                <div class="cost-icon">📝</div>
+                <div class="cost-label">Text</div>
+                <div class="cost-example">"Hallo, wie geht's?"</div>
+                <div class="cost-tokens">~5 Tokens</div>
+                <div class="cost-bar"><div class="cost-fill" style="width: 1%"></div></div>
+            </div>
+            <div class="cost-card" data-type="prompt">
+                <div class="cost-icon">💬</div>
+                <div class="cost-label">Langer Prompt</div>
+                <div class="cost-example">500 Wörter Anweisung</div>
+                <div class="cost-tokens">~750 Tokens</div>
+                <div class="cost-bar"><div class="cost-fill" style="width: 8%"></div></div>
+            </div>
+            <div class="cost-card" data-type="image">
+                <div class="cost-icon">🖼️</div>
+                <div class="cost-label">Ein Foto</div>
+                <div class="cost-example">Smartphone-Bild (1024px)</div>
+                <div class="cost-tokens">~1.500 Tokens</div>
+                <div class="cost-bar"><div class="cost-fill" style="width: 15%"></div></div>
+            </div>
+            <div class="cost-card" data-type="pdf">
+                <div class="cost-icon">📄</div>
+                <div class="cost-label">PDF-Dokument</div>
+                <div class="cost-example">10-seitiges Dokument</div>
+                <div class="cost-tokens">~8.000 Tokens</div>
+                <div class="cost-bar"><div class="cost-fill" style="width: 40%"></div></div>
+            </div>
+            <div class="cost-card" data-type="book">
+                <div class="cost-icon">📚</div>
+                <div class="cost-label">Ganzes Buch</div>
+                <div class="cost-example">~300 Seiten</div>
+                <div class="cost-tokens">~120.000 Tokens</div>
+                <div class="cost-bar"><div class="cost-fill" style="width: 95%"></div></div>
+            </div>
+            <div class="cost-card" data-type="image-hd">
+                <div class="cost-icon">📸</div>
+                <div class="cost-label">HD-Foto (hochauflösend)</div>
+                <div class="cost-example">4K-Bild, detailliert</div>
+                <div class="cost-tokens">~5.000 Tokens</div>
+                <div class="cost-bar"><div class="cost-fill" style="width: 25%"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aha Moment -->
+    <div class="aha-box">
+        <div class="aha-icon">💡</div>
+        <div class="aha-content">
+            <strong>Aha-Moment:</strong> Wenn ihr eurem Custom GPT eine 50-seitige PDF als Knowledge gebt, sind schon ~40.000 Tokens verbraucht — <em>bevor der erste Chat beginnt!</em>
+            <br><br>
+            Das heißt: Bei GPT-4o (128K) sind schon <strong>31%</strong> des Kontextfensters weg.
+        </div>
+    </div>
+
+    <!-- Tool Comparison Table -->
+    <div class="tool-comparison">
+        <h3>Welches Tool kann was verarbeiten?</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Fähigkeit</th>
+                    <th class="tool-col"><span class="tool-badge copilot">Copilot</span></th>
+                    <th class="tool-col"><span class="tool-badge chatgpt">ChatGPT</span></th>
+                    <th class="tool-col"><span class="tool-badge claude">Claude</span></th>
+                    <th class="tool-col"><span class="tool-badge gemini">Gemini</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Text verstehen</td>
+                    <td>✅</td><td>✅</td><td>✅</td><td>✅</td>
+                </tr>
+                <tr>
+                    <td>Bilder analysieren</td>
+                    <td>✅</td><td>✅</td><td>✅</td><td>✅</td>
+                </tr>
+                <tr>
+                    <td>PDFs lesen</td>
+                    <td>✅</td><td>✅</td><td>✅</td><td>✅</td>
+                </tr>
+                <tr>
+                    <td>Audio/Sprache</td>
+                    <td>✅</td><td>✅</td><td>❌</td><td>✅</td>
+                </tr>
+                <tr>
+                    <td>Video analysieren</td>
+                    <td>❌</td><td>❌</td><td>❌</td><td>✅</td>
+                </tr>
+                <tr>
+                    <td>Bilder erzeugen</td>
+                    <td>✅ (Designer)</td><td>✅ (DALL-E)</td><td>❌</td><td>✅ (Imagen)</td>
+                </tr>
+                <tr>
+                    <td>Code ausführen</td>
+                    <td>❌</td><td>✅</td><td>❌*</td><td>✅</td>
+                </tr>
+                <tr>
+                    <td>Dateien erzeugen</td>
+                    <td>Eingeschränkt</td><td>✅</td><td>✅</td><td>✅</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="table-note">* Claude kann Code schreiben, aber nicht direkt ausführen (außer in Claude Code / Artifacts)</p>
+    </div>
+
+    <!-- Interactive: Image vs Text -->
+    <div class="multimodal-demo">
+        <h3>Experiment: Bild vs. Text</h3>
+        <p>Stellt euch vor, ihr wollt der KI eine Rechnung zeigen. Was ist effizienter?</p>
+        <div class="demo-comparison">
+            <div class="demo-option">
+                <div class="demo-title">Option A: Foto hochladen</div>
+                <div class="demo-visual">
+                    <div class="demo-icon">📸</div>
+                    <div class="demo-arrow">→</div>
+                    <div class="demo-tokens-display">~1.500 Tokens</div>
+                </div>
+                <div class="demo-note">KI muss das Bild "lesen" und interpretieren</div>
+            </div>
+            <div class="demo-vs">VS</div>
+            <div class="demo-option winner">
+                <div class="demo-title">Option B: Text rauskopieren</div>
+                <div class="demo-visual">
+                    <div class="demo-icon">📋</div>
+                    <div class="demo-arrow">→</div>
+                    <div class="demo-tokens-display">~200 Tokens</div>
+                </div>
+                <div class="demo-note">Gleiche Info, 7x weniger Kontext-Verbrauch!</div>
+            </div>
+        </div>
+        <div class="aha-box small">
+            <div class="aha-icon">💡</div>
+            <div class="aha-content">
+                <strong>Merksatz:</strong> Text ist fast immer effizienter als Bilder — außer ihr braucht die visuelle Information (z.B. "Was siehst du auf diesem Foto?").
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- TAB 3: DAS GEDÄCHTNIS — Context vs. Memory  -->
+<!-- ============================================ -->
+<section class="tab-content" id="tab-memory">
+    <div class="section-header">
+        <h1>Das Gedächtnis der KI</h1>
+        <p class="section-intro">Die KI hat kein echtes Gedächtnis wie ein Mensch. Was sie "weiß", ist nur das, was gerade in ihrem Kontextfenster steht. Aber es gibt Tricks, um das zu umgehen.</p>
+    </div>
+
+    <!-- Chat Memory Animation -->
+    <div class="memory-demo">
+        <h3>Was passiert in einem langen Chat?</h3>
+        <div class="chat-window">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Will be filled by JS -->
+            </div>
+            <div class="chat-context-bar">
+                <div class="context-bar-fill" id="chatContextFill"></div>
+                <div class="context-bar-label" id="chatContextLabel">Kontextfenster: 0% belegt</div>
+            </div>
+            <div class="chat-controls">
+                <button class="btn-chat" id="btnAddMessage">Nächste Nachricht senden</button>
+                <button class="btn-chat secondary" id="btnAutoPlay">▶️ Auto-Play</button>
+                <button class="btn-chat secondary" id="btnResetChat">↺ Zurücksetzen</button>
+            </div>
+        </div>
+        <div class="memory-explanation" id="memoryExplanation">
+            <p>Klicke auf "Nächste Nachricht senden" und beobachte was passiert, wenn der Kontext voll wird...</p>
+        </div>
+    </div>
+
+    <!-- Three Types of "Memory" -->
+    <div class="memory-types">
+        <h3>Drei Arten von "Gedächtnis"</h3>
+        <div class="memory-grid">
+            <div class="memory-card">
+                <div class="memory-card-header session">
+                    <span class="memory-card-icon">💬</span>
+                    <h4>Sitzungs-Kontext</h4>
+                </div>
+                <div class="memory-card-body">
+                    <p><strong>Was:</strong> Alles was in DIESEM Chat gesagt wurde</p>
+                    <p><strong>Dauer:</strong> Nur diese Sitzung</p>
+                    <p><strong>Limit:</strong> Durch Kontextfenster begrenzt</p>
+                    <div class="memory-analogy">"Wie ein Gespräch — wenn ihr geht, vergisst die KI alles"</div>
+                </div>
+            </div>
+            <div class="memory-card">
+                <div class="memory-card-header knowledge">
+                    <span class="memory-card-icon">📚</span>
+                    <h4>Knowledge / Wissen</h4>
+                </div>
+                <div class="memory-card-body">
+                    <p><strong>Was:</strong> Dateien die ihr im Agenten hinterlegt</p>
+                    <p><strong>Dauer:</strong> Dauerhaft (im Agenten gespeichert)</p>
+                    <p><strong>Limit:</strong> Frisst Platz im Kontextfenster!</p>
+                    <div class="memory-analogy">"Wie ein Nachschlagewerk auf dem Schreibtisch — immer da, braucht aber Platz"</div>
+                </div>
+            </div>
+            <div class="memory-card">
+                <div class="memory-card-header persistent">
+                    <span class="memory-card-icon">🧠</span>
+                    <h4>Persistenter Speicher</h4>
+                </div>
+                <div class="memory-card-body">
+                    <p><strong>Was:</strong> Dinge die sich die KI über Sitzungen hinweg merkt</p>
+                    <p><strong>Dauer:</strong> Dauerhaft</p>
+                    <p><strong>Wo:</strong> ChatGPT Memory, Claude Projects, Copilot Notebook</p>
+                    <div class="memory-analogy">"Wie ein Notizbuch — die KI schreibt sich Dinge auf und liest sie beim nächsten Chat"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompting Connection -->
+    <div class="prompting-connection">
+        <h3>Verbindung zum Prompting</h3>
+        <div class="prompt-comparison">
+            <div class="prompt-example bad">
+                <div class="prompt-label">❌ Verschwendet Kontext</div>
+                <div class="prompt-text">
+                    "Hallo liebe KI, ich hoffe es geht dir gut. Ich hätte da mal eine Frage, und zwar geht es um Folgendes: Ich arbeite gerade an einer Bewerbung und frage mich, ob du mir vielleicht dabei helfen könntest, mein Anschreiben zu verbessern? Es wäre wirklich super nett wenn du dir das mal anschauen könntest. Also hier ist mein Text..."
+                </div>
+                <div class="prompt-tokens">~85 Tokens für die Frage allein</div>
+            </div>
+            <div class="prompt-example good">
+                <div class="prompt-label">✅ Effizient</div>
+                <div class="prompt-text">
+                    "Verbessere mein Anschreiben für eine Stelle als Projektmanager. Fokus: Klarere Struktur, stärkere Einleitung. Hier der Text:"
+                </div>
+                <div class="prompt-tokens">~25 Tokens — gleiche Info, 70% weniger!</div>
+            </div>
+        </div>
+        <div class="aha-box">
+            <div class="aha-icon">💡</div>
+            <div class="aha-content">
+                <strong>Merksatz:</strong> Gutes Prompting ist auch gutes Kontext-Management. Je präziser eure Anweisung, desto mehr Platz bleibt für die eigentliche Arbeit.
+            </div>
+        </div>
+    </div>
+
+    <!-- LUCA Link -->
+    <div class="luca-link">
+        <div class="luca-icon">🧪</div>
+        <div class="luca-content">
+            <h4>Testet es selbst in LUCA!</h4>
+            <p>Öffnet LUCA und führt einen langen Chat. Beobachtet, wie sich die Antworten verändern, wenn der Kontext voller wird.</p>
+            <a href="http://localhost:3334/chat" target="_blank" class="btn-luca">LUCA öffnen →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- TAB 4: DIE ARME — APIs & Tools              -->
+<!-- ============================================ -->
+<section class="tab-content" id="tab-apis">
+    <div class="section-header">
+        <h1>Die Arme der KI</h1>
+        <p class="section-intro">Euer Agent ist schlau — aber <strong>blind und taub</strong> gegenüber der Außenwelt. Er weiß nicht wie das Wetter ist, kennt keine aktuellen Nachrichten und kann keine E-Mails senden. <strong>APIs</strong> sind seine Arme, mit denen er nach draußen greift.</p>
+    </div>
+
+    <!-- Before/After -->
+    <div class="api-before-after">
+        <div class="api-state before">
+            <div class="api-state-header">Ohne API-Anbindung</div>
+            <div class="agent-box">
+                <div class="agent-icon">🤖</div>
+                <div class="agent-speech">"Ich kann dir leider nicht sagen wie das Wetter gerade ist. Ich habe keinen Zugriff auf aktuelle Daten."</div>
+            </div>
+            <div class="api-pipes">
+                <div class="pipe disconnected">
+                    <span class="pipe-label">Wetter</span>
+                    <span class="pipe-status">✖</span>
+                </div>
+                <div class="pipe disconnected">
+                    <span class="pipe-label">E-Mail</span>
+                    <span class="pipe-status">✖</span>
+                </div>
+                <div class="pipe disconnected">
+                    <span class="pipe-label">Kalender</span>
+                    <span class="pipe-status">✖</span>
+                </div>
+            </div>
+        </div>
+        <div class="api-arrow-big">→</div>
+        <div class="api-state after">
+            <div class="api-state-header">Mit API-Anbindung</div>
+            <div class="agent-box connected">
+                <div class="agent-icon">🤖</div>
+                <div class="agent-speech">"In Dresden sind es gerade 13°C bei klarem Himmel. Soll ich dir eine Erinnerung in den Kalender setzen?"</div>
+            </div>
+            <div class="api-pipes">
+                <div class="pipe connected" id="pipeWeather">
+                    <span class="pipe-label">Wetter</span>
+                    <span class="pipe-status">✔</span>
+                    <div class="data-flow">
+                        <span class="data-dot"></span>
+                        <span class="data-dot"></span>
+                        <span class="data-dot"></span>
+                    </div>
+                </div>
+                <div class="pipe connected" id="pipeEmail">
+                    <span class="pipe-label">E-Mail</span>
+                    <span class="pipe-status">✔</span>
+                    <div class="data-flow">
+                        <span class="data-dot"></span>
+                        <span class="data-dot"></span>
+                        <span class="data-dot"></span>
+                    </div>
+                </div>
+                <div class="pipe connected" id="pipeCalendar">
+                    <span class="pipe-label">Kalender</span>
+                    <span class="pipe-status">✔</span>
+                    <div class="data-flow">
+                        <span class="data-dot"></span>
+                        <span class="data-dot"></span>
+                        <span class="data-dot"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Flow Visualization -->
+    <div class="api-flow">
+        <h3>Wie funktioniert eine API? — Die Restaurant-Metapher</h3>
+        <div class="restaurant-flow">
+            <div class="restaurant-actor">
+                <div class="actor-icon">👤</div>
+                <div class="actor-label">DU (App)</div>
+                <div class="actor-speech">"Wie ist das Wetter?"</div>
+            </div>
+            <div class="flow-arrow">
+                <span class="flow-label">Anfrage (Request)</span>
+                <div class="flow-line">
+                    <span class="flow-dot"></span>
+                </div>
+            </div>
+            <div class="restaurant-actor">
+                <div class="actor-icon">🤵</div>
+                <div class="actor-label">KELLNER (API)</div>
+                <div class="actor-speech">"Moment, ich frage!"</div>
+            </div>
+            <div class="flow-arrow">
+                <span class="flow-label">Verarbeitung</span>
+                <div class="flow-line">
+                    <span class="flow-dot"></span>
+                </div>
+            </div>
+            <div class="restaurant-actor">
+                <div class="actor-icon">👨‍🍳</div>
+                <div class="actor-label">KÜCHE (Server)</div>
+                <div class="actor-speech">{ "temp": "13°C" }</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive: Connect/Disconnect -->
+    <div class="api-interactive">
+        <h3>Experiment: Verbindungen aktivieren</h3>
+        <p>Klicke auf die Schalter und beobachte, wie sich die Fähigkeiten des Agenten verändern:</p>
+        <div class="api-toggles">
+            <div class="api-toggle-row">
+                <label class="toggle-label">
+                    <input type="checkbox" class="api-toggle" data-api="weather" checked>
+                    <span class="toggle-switch"></span>
+                    <span class="toggle-text">🌤 Wetter-API</span>
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" class="api-toggle" data-api="email">
+                    <span class="toggle-switch"></span>
+                    <span class="toggle-text">📧 E-Mail (SMTP)</span>
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" class="api-toggle" data-api="calendar">
+                    <span class="toggle-switch"></span>
+                    <span class="toggle-text">📅 Google Kalender</span>
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" class="api-toggle" data-api="search">
+                    <span class="toggle-switch"></span>
+                    <span class="toggle-text">🔍 Web-Suche</span>
+                </label>
+            </div>
+        </div>
+        <div class="agent-capabilities" id="agentCapabilities">
+            <div class="capability-header">🤖 Euer Agent kann jetzt:</div>
+            <ul id="capabilityList">
+                <li class="capability active" data-api="weather">Aktuelle Wetterdaten abrufen</li>
+                <li class="capability" data-api="email">E-Mails senden und empfangen</li>
+                <li class="capability" data-api="calendar">Termine lesen und erstellen</li>
+                <li class="capability" data-api="search">Im Internet suchen</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- How Tools Connect -->
+    <div class="connection-types">
+        <h3>Wie verbindet man Tools?</h3>
+        <div class="connection-grid">
+            <div class="connection-card">
+                <div class="connection-header copilot-bg">
+                    <span>Copilot</span>
+                </div>
+                <div class="connection-body">
+                    <h4>Konnektoren</h4>
+                    <p>Fertige Bausteine zum Anklicken</p>
+                    <ul>
+                        <li>Microsoft 365 integriert</li>
+                        <li>Power Automate Konnektoren</li>
+                        <li>Kein Code nötig</li>
+                    </ul>
+                    <div class="connection-difficulty">Einstieg: ⭐</div>
+                </div>
+            </div>
+            <div class="connection-card">
+                <div class="connection-header chatgpt-bg">
+                    <span>ChatGPT</span>
+                </div>
+                <div class="connection-body">
+                    <h4>Custom Actions</h4>
+                    <p>Flexible API-Anbindung per Schema</p>
+                    <ul>
+                        <li>OpenAPI-Schema definieren</li>
+                        <li>Jede REST-API anbindbar</li>
+                        <li>Technischer, aber flexibler</li>
+                    </ul>
+                    <div class="connection-difficulty">Einstieg: ⭐⭐</div>
+                </div>
+            </div>
+            <div class="connection-card">
+                <div class="connection-header n8n-bg">
+                    <span>n8n / Make</span>
+                </div>
+                <div class="connection-body">
+                    <h4>Workflow-Automation</h4>
+                    <p>Visuelle Verbindung ohne Code</p>
+                    <ul>
+                        <li>Drag & Drop Workflows</li>
+                        <li>Hunderte Integrationen</li>
+                        <li>Trigger-basiert (automatisch)</li>
+                    </ul>
+                    <div class="connection-difficulty">Einstieg: ⭐⭐</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- TAB 5: DAS NERVENSYSTEM — MCP & Skills      -->
+<!-- ============================================ -->
+<section class="tab-content" id="tab-mcp">
+    <div class="section-header">
+        <h1>Das Nervensystem der KI</h1>
+        <p class="section-intro">APIs sind die Arme — aber jeder Arm braucht einen eigenen Adapter. <strong>MCP</strong> (Model Context Protocol) ist der universelle Stecker: <em>Ein Standard, alle Tools.</em></p>
+    </div>
+
+    <!-- The Problem -->
+    <div class="mcp-problem">
+        <h3>Das Problem ohne MCP</h3>
+        <div class="chaos-grid-layout">
+            <div class="chaos-tool-item">
+                <span class="chaos-adapter-tag" style="background:#e74c3c">Adapter A</span>
+                <span>📧 Gmail</span>
+            </div>
+            <div class="chaos-tool-item">
+                <span class="chaos-adapter-tag" style="background:#3498db">Adapter B</span>
+                <span>📅 Kalender</span>
+            </div>
+            <div class="chaos-tool-item">
+                <span class="chaos-adapter-tag" style="background:#2ecc71">Adapter C</span>
+                <span>📁 Dateien</span>
+            </div>
+            <div class="chaos-center-item">
+                <div class="chaos-agent-emoji">🤖</div>
+                <span>LLM</span>
+            </div>
+            <div class="chaos-tool-item">
+                <span class="chaos-adapter-tag" style="background:#9b59b6">Adapter D</span>
+                <span>🔍 Suche</span>
+            </div>
+            <div class="chaos-tool-item">
+                <span class="chaos-adapter-tag" style="background:#e67e22">Adapter E</span>
+                <span>💾 Datenbank</span>
+            </div>
+            <div class="chaos-tool-item">
+                <span class="chaos-adapter-tag" style="background:#1abc9c">Adapter F</span>
+                <span>🌐 API</span>
+            </div>
+        </div>
+        <p class="chaos-caption-text">Jedes Tool braucht seinen eigenen Adapter — Chaos! 🔴</p>
+    </div>
+
+    <!-- The Solution -->
+    <div class="mcp-solution">
+        <h3>Die Lösung: MCP — Ein Stecker für alles</h3>
+        <div class="mcp-visual">
+            <div class="mcp-left">
+                <div class="mcp-agent">🤖 LLM</div>
+            </div>
+            <div class="mcp-center">
+                <div class="mcp-plug">
+                    <div class="mcp-plug-icon">🔌</div>
+                    <div class="mcp-plug-label">MCP</div>
+                </div>
+            </div>
+            <div class="mcp-right">
+                <div class="mcp-tool">📧 Gmail</div>
+                <div class="mcp-tool">📅 Kalender</div>
+                <div class="mcp-tool">📁 Dateien</div>
+                <div class="mcp-tool">🔍 Suche</div>
+                <div class="mcp-tool">💾 Datenbank</div>
+                <div class="mcp-tool">🌐 Jede API</div>
+            </div>
+        </div>
+        <div class="mcp-analogy">
+            <strong>Analogie:</strong> MCP ist wie USB-C — ein Stecker für alles. Vorher brauchte jedes Gerät sein eigenes Kabel (Lightning, Micro-USB, Mini-USB...). MCP macht das Gleiche für KI-Tools.
+        </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="skills-section">
+        <h3>Skills — Fertige Fähigkeiten</h3>
+        <p>Ein <strong>Skill</strong> ist ein fertiges Paket das der KI eine neue Fähigkeit gibt. Statt selbst eine API anzubinden, installiert man einen Skill — wie eine App auf dem Smartphone.</p>
+        <div class="skills-demo">
+            <div class="skill-card" data-skill="none">
+                <div class="skill-header">
+                    <span class="skill-status off">●</span>
+                    Agent ohne Skills
+                </div>
+                <div class="skill-response">
+                    "Ich kann leider keine E-Mails senden. Ich bin ein reiner Text-Assistent."
+                </div>
+            </div>
+            <div class="skill-arrow">+ Skill installieren →</div>
+            <div class="skill-card" data-skill="email">
+                <div class="skill-header">
+                    <span class="skill-status on">●</span>
+                    Agent mit E-Mail-Skill
+                </div>
+                <div class="skill-response">
+                    "Ich habe die E-Mail an max@beispiel.de gesendet. Betreff: 'Meeting morgen'. Soll ich noch eine Erinnerung setzen?"
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bridge to n8n -->
+    <div class="bridge-n8n">
+        <div class="bridge-icon">🔮</div>
+        <div class="bridge-content">
+            <h4>Vorschau: In Woche 3 baut ihr das selbst</h4>
+            <p>Mit <strong>n8n</strong> werdet ihr eigene Workflows bauen, die genau diese Verbindungen herstellen: KI + APIs + Trigger = euer eigener Agent der automatisch handelt.</p>
+            <div class="bridge-flow">
+                <span class="bridge-step">Trigger</span>
+                <span class="bridge-connector">→</span>
+                <span class="bridge-step">KI verarbeitet</span>
+                <span class="bridge-connector">→</span>
+                <span class="bridge-step">Aktion ausführen</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
