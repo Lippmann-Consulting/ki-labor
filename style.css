@@ -1,5 +1,5 @@
 /* ============================================
-   KI-LABOR — Interaktive Lernumgebung
+   KI-LABOR: Interaktive Lernumgebung
    Dark Theme, passend zum Kurs-Design
    ============================================ */
 
@@ -1636,4 +1636,53 @@ p, li, td, span, label, .control-hint, .fact, .table-note,
     .nav-tabs { gap: 2px; }
     .nav-tab { min-width: 80px; padding: 6px 10px; }
     .tab-label { font-size: 10px; }
+}
+
+/* ============================================
+   ICONS (Lucide, inline SVG-Sprite)
+   ============================================ */
+.icon {
+    width: 1em;
+    height: 1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: inline-block;
+    vertical-align: -0.15em;
+    flex-shrink: 0;
+}
+
+.nav-brand .icon { color: #8b8ff0; }
+.tab-icon .icon { display: block; }
+.aha-icon .icon { color: var(--accent-orange); }
+.cost-icon .icon,
+.demo-icon .icon,
+.luca-icon .icon,
+.bridge-icon .icon,
+.actor-icon .icon,
+.agent-icon .icon,
+.chaos-agent-emoji .icon { display: block; margin: 0 auto; }
+.fact-icon .icon { color: var(--accent-blue); }
+.memory-card-icon .icon { vertical-align: -0.2em; }
+.toggle-text .icon,
+.capability-header .icon,
+.mcp-tool .icon,
+.mcp-agent .icon,
+.chaos-tool-item .icon { vertical-align: -0.2em; margin-right: 4px; }
+.luca-icon .icon { color: #8b8ff0; }
+.bridge-icon .icon { color: var(--accent-purple); }
+
+/* Ja/Nein-Markierungen in Tabellen und Labels */
+.mark { font-weight: 800; }
+.mark.yes { color: var(--accent-green); }
+.mark.no { color: var(--accent-red); }
+
+/* 6 Modell-Buttons: gleichmäßiges Raster auf breiten Screens */
+@media (min-width: 900px) {
+    .model-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }

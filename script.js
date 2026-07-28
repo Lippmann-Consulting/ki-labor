@@ -1,5 +1,5 @@
 /* ============================================
-   KI-LABOR — Interactive Learning Environment
+   KI-LABOR: Interactive Learning Environment
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -52,8 +52,8 @@ function initContextBucket() {
         user: document.getElementById('valUser'),
     };
 
-    let maxTokens = 128000;
-    let modelColor = '#3b82f6';
+    let maxTokens = 256000;
+    let modelColor = '#10a37f';
 
     // Model selection
     modelBtns.forEach(btn => {
@@ -219,7 +219,7 @@ function initChatMemory() {
         { role: 'user', text: 'Kannst du mir ein Anschreiben schreiben?' },
         { role: 'assistant', text: 'Klar! Für welche Stelle soll ich das Anschreiben verfassen?' },
         { role: 'user', text: 'Für eine IT-Projektmanager-Stelle bei SAP in Walldorf.' },
-        { role: 'assistant', text: 'SAP in Walldorf — sehr gut! Ich schreibe ein Anschreiben das deine Siemens-Erfahrung und Scrum-Zertifizierung hervorhebt.' },
+        { role: 'assistant', text: 'SAP in Walldorf, sehr gut! Ich schreibe ein Anschreiben das deine Siemens-Erfahrung und Scrum-Zertifizierung hervorhebt.' },
         { role: 'user', text: 'Bitte betone auch meine Teamführung.' },
         { role: 'assistant', text: 'Wird gemacht! Ich füge deine Teamführungskompetenz prominent ein.' },
         { role: 'user', text: 'Wie ist eigentlich das Wetter in Walldorf?' },
@@ -236,12 +236,12 @@ function initChatMemory() {
         { role: 'user', text: 'Wie heiße ich eigentlich?' },
         { role: 'assistant', text: 'Hmm... ich bin mir nicht mehr sicher. Könntest du mir deinen Namen nochmal sagen?' },
         { role: 'user', text: 'Woher komme ich?' },
-        { role: 'assistant', text: 'Das kann ich leider nicht mehr nachvollziehen. Unser Gespräch ist schon recht lang — die älteren Nachrichten sind nicht mehr in meinem Kontext.' },
+        { role: 'assistant', text: 'Das kann ich leider nicht mehr nachvollziehen. Unser Gespräch ist schon recht lang, die älteren Nachrichten sind nicht mehr in meinem Kontext.' },
     ];
 
     function addMessage() {
         if (messageIndex >= conversation.length) {
-            explanation.innerHTML = '<strong style="color: #ef4444">Ende der Demo!</strong> Die KI hat den Anfang des Gesprächs vergessen — Name, Herkunft, alles weg.';
+            explanation.innerHTML = '<strong style="color: #ef4444">Ende der Demo!</strong> Die KI hat den Anfang des Gesprächs vergessen: Name, Herkunft, alles weg.';
             return;
         }
 
@@ -277,13 +277,13 @@ function initChatMemory() {
 
         // Explanations at key moments
         if (messageIndex === 10) {
-            explanation.innerHTML = '📊 Der Kontext füllt sich... die KI erinnert sich noch an alles.';
+            explanation.innerHTML = 'Der Kontext füllt sich... die KI erinnert sich noch an alles.';
         } else if (messageIndex === 18) {
-            explanation.innerHTML = '⚠️ Das Kontextfenster wird voll. Gleich gehen die ersten Nachrichten verloren...';
+            explanation.innerHTML = '<strong style="color: #f59e0b">Achtung:</strong> Das Kontextfenster wird voll. Gleich gehen die ersten Nachrichten verloren...';
         } else if (messageIndex === 22) {
-            explanation.innerHTML = '🔴 <strong>Älteste Nachrichten werden vergessen!</strong> Die KI verliert den Anfang des Gesprächs.';
+            explanation.innerHTML = '<strong style="color: #ef4444">Älteste Nachrichten werden vergessen!</strong> Die KI verliert den Anfang des Gesprächs.';
         } else if (messageIndex === 28) {
-            explanation.innerHTML = '💥 <strong>Die KI weiß nicht mehr wie der User heißt!</strong> Der Name war in einer der ersten Nachrichten — jetzt aus dem Kontext gefallen.';
+            explanation.innerHTML = '<strong style="color: #ef4444">Die KI weiß nicht mehr, wie der User heißt!</strong> Der Name war in einer der ersten Nachrichten und ist jetzt aus dem Kontext gefallen.';
         }
     }
 
@@ -293,18 +293,18 @@ function initChatMemory() {
         if (autoInterval) {
             clearInterval(autoInterval);
             autoInterval = null;
-            btnAuto.textContent = '▶️ Auto-Play';
+            btnAuto.textContent = 'Auto-Play';
         } else {
             autoInterval = setInterval(() => {
                 if (messageIndex >= conversation.length) {
                     clearInterval(autoInterval);
                     autoInterval = null;
-                    btnAuto.textContent = '▶️ Auto-Play';
+                    btnAuto.textContent = 'Auto-Play';
                     return;
                 }
                 addMessage();
             }, 1500);
-            btnAuto.textContent = '⏸ Stopp';
+            btnAuto.textContent = 'Stopp';
         }
     });
 
@@ -312,7 +312,7 @@ function initChatMemory() {
         if (autoInterval) {
             clearInterval(autoInterval);
             autoInterval = null;
-            btnAuto.textContent = '▶️ Auto-Play';
+            btnAuto.textContent = 'Auto-Play';
         }
         chatMessages.innerHTML = '';
         messageIndex = 0;

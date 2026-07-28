@@ -3,75 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KI-Labor — Interaktive Lernumgebung</title>
+    <title>KI-Labor: Interaktive Lernumgebung</title>
+    <meta name="description" content="Interaktive Lernumgebung zum Anfassen: Kontextfenster, Tokens, Multimodalität, Gedächtnis, APIs und MCP. Begleitmaterial zur Weiterbildung KI-Beauftragte:r.">
+    <meta property="og:title" content="KI-Labor: Interaktive Lernumgebung">
+    <meta property="og:description" content="Erleben Sie selbst, wie eine KI arbeitet: Kontextfenster, Tokens, Gedächtnis, APIs und MCP.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B5FC7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2'/%3E%3Cpath d='M8.5 2h7'/%3E%3Cpath d='M7 16h10'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- Lucide-Icon-Sprite (inline, keine externen Anfragen) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+    <symbol id="i-languages" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></symbol>
+    <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.3 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M3 20a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1Z"/><path d="M20 16a8 8 0 1 0-16 0"/><path d="M12 4v4"/><path d="M10 4h4"/></symbol>
+    <symbol id="i-chef" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></symbol>
+    <symbol id="i-cloud-sun" viewBox="0 0 24 24"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+</svg>
+
 <!-- Navigation -->
 <nav class="lab-nav">
-    <div class="nav-brand">🧪 KI-Labor</div>
+    <div class="nav-brand"><svg class="icon"><use href="#i-flask"/></svg> KI-Labor</div>
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="context">
-            <span class="tab-icon">🧠</span>
+            <span class="tab-icon"><svg class="icon"><use href="#i-brain"/></svg></span>
             <span class="tab-label">Der Kopf</span>
             <span class="tab-sub">Kontextfenster</span>
         </button>
         <button class="nav-tab" data-tab="multimodal">
-            <span class="tab-icon">👁️</span>
+            <span class="tab-icon"><svg class="icon"><use href="#i-eye"/></svg></span>
             <span class="tab-label">Die Sinne</span>
             <span class="tab-sub">Multimodal</span>
         </button>
         <button class="nav-tab" data-tab="memory">
-            <span class="tab-icon">💾</span>
+            <span class="tab-icon"><svg class="icon"><use href="#i-database"/></svg></span>
             <span class="tab-label">Das Gedächtnis</span>
             <span class="tab-sub">Context vs. Memory</span>
         </button>
         <button class="nav-tab locked" data-tab="apis">
-            <span class="tab-icon">🦾</span>
+            <span class="tab-icon"><svg class="icon"><use href="#i-wrench"/></svg></span>
             <span class="tab-label">Die Arme</span>
-            <span class="tab-sub">APIs & Tools</span>
+            <span class="tab-sub">APIs &amp; Tools</span>
         </button>
         <button class="nav-tab locked" data-tab="mcp">
-            <span class="tab-icon">🔌</span>
+            <span class="tab-icon"><svg class="icon"><use href="#i-plug"/></svg></span>
             <span class="tab-label">Das Nervensystem</span>
-            <span class="tab-sub">MCP & Skills</span>
+            <span class="tab-sub">MCP &amp; Skills</span>
         </button>
     </div>
 </nav>
 
 <!-- ============================================ -->
-<!-- TAB 1: DER KOPF — Kontextfenster            -->
+<!-- TAB 1: DER KOPF, Kontextfenster              -->
 <!-- ============================================ -->
 <section class="tab-content active" id="tab-context">
     <div class="section-header">
         <h1>Der Kopf der KI</h1>
-        <p class="section-intro">Jede KI hat einen begrenzten Arbeitsspeicher — das <strong>Kontextfenster</strong>. Alles was ihr schreibt, alles was die KI antwortet, und alles was ihr hochladet — muss dort hineinpassen.</p>
+        <p class="section-intro">Jede KI hat einen begrenzten Arbeitsspeicher: das <strong>Kontextfenster</strong>. Alles, was Sie schreiben, alles, was die KI antwortet, und alles, was Sie hochladen, muss dort hineinpassen.</p>
     </div>
 
     <!-- Model Selector -->
     <div class="model-selector">
-        <h3>Wähle ein Modell:</h3>
+        <h3>Wählen Sie ein Modell:</h3>
         <div class="model-buttons">
-            <button class="model-btn active" data-model="gpt41" data-tokens="1000000" data-color="#10a37f">
-                <span class="model-name">GPT-4.1</span>
-                <span class="model-detail">1M (API) / 272K (Plus)</span>
+            <button class="model-btn active" data-model="chatgpt" data-tokens="256000" data-color="#10a37f">
+                <span class="model-name">ChatGPT (GPT-5.6)</span>
+                <span class="model-detail">App: bis 256K / API: 1M</span>
             </button>
-            <button class="model-btn" data-model="copilot" data-tokens="128000" data-color="#0078d4">
-                <span class="model-name">Copilot</span>
-                <span class="model-detail">128K Tokens</span>
+            <button class="model-btn" data-model="copilot" data-tokens="400000" data-color="#0078d4">
+                <span class="model-name">Microsoft Copilot</span>
+                <span class="model-detail">ca. 400K Tokens</span>
             </button>
-            <button class="model-btn" data-model="claude" data-tokens="200000" data-color="#d97706">
-                <span class="model-name">Claude Opus 4.6</span>
-                <span class="model-detail">200K / 1M Beta</span>
+            <button class="model-btn" data-model="claude" data-tokens="1000000" data-color="#d97706">
+                <span class="model-name">Claude Opus 4.8</span>
+                <span class="model-detail">1M Tokens</span>
             </button>
-            <button class="model-btn" data-model="gemini" data-tokens="2000000" data-color="#4285f4">
-                <span class="model-name">Gemini 2.5 Pro</span>
-                <span class="model-detail">1M–2M Tokens</span>
+            <button class="model-btn" data-model="gemini" data-tokens="1000000" data-color="#4285f4">
+                <span class="model-name">Gemini 3 Pro</span>
+                <span class="model-detail">1M Tokens</span>
+            </button>
+            <button class="model-btn" data-model="mistral" data-tokens="256000" data-color="#f54e00">
+                <span class="model-name">Mistral Large 3</span>
+                <span class="model-detail">256K Tokens (EU-Modell)</span>
             </button>
             <button class="model-btn" data-model="deepseek" data-tokens="128000" data-color="#5b6abf">
-                <span class="model-name">DeepSeek V3</span>
-                <span class="model-detail">128K Tokens</span>
+                <span class="model-name">DeepSeek V3.2</span>
+                <span class="model-detail">128K Tokens (Open Source)</span>
             </button>
         </div>
     </div>
@@ -85,8 +124,8 @@
                     <div class="bucket-segment system-prompt" id="segSystem" title="System Prompt">
                         <span>System Prompt</span>
                     </div>
-                    <div class="bucket-segment user-input" id="segUser" title="Deine Eingabe">
-                        <span>Deine Eingabe</span>
+                    <div class="bucket-segment user-input" id="segUser" title="Ihre Eingabe">
+                        <span>Ihre Eingabe</span>
                     </div>
                     <div class="bucket-segment ai-response" id="segResponse" title="KI-Antwort">
                         <span>KI-Antwort</span>
@@ -98,7 +137,7 @@
                 <div class="bucket-empty" id="bucketEmpty">
                     <span>Freier Platz</span>
                 </div>
-                <div class="bucket-capacity" id="bucketCapacity">128.000 Tokens</div>
+                <div class="bucket-capacity" id="bucketCapacity">256.000 Tokens</div>
             </div>
             <div class="bucket-stats">
                 <div class="stat">
@@ -108,7 +147,7 @@
                 </div>
                 <div class="stat">
                     <span class="stat-label">Frei:</span>
-                    <span class="stat-value" id="statFree">128.000</span>
+                    <span class="stat-value" id="statFree">256.000</span>
                     <span class="stat-unit">Tokens</span>
                 </div>
                 <div class="stat">
@@ -120,7 +159,7 @@
 
         <!-- Interactive Controls -->
         <div class="bucket-controls">
-            <h3>Fülle den Kopf:</h3>
+            <h3>Füllen Sie den Kopf:</h3>
 
             <div class="control-group">
                 <label>System Prompt</label>
@@ -131,23 +170,23 @@
 
             <div class="control-group">
                 <label>Knowledge / Dateien</label>
-                <input type="range" id="sliderKnowledge" min="0" max="100000" value="0" step="1000">
+                <input type="range" id="sliderKnowledge" min="0" max="200000" value="0" step="1000">
                 <span class="range-value" id="valKnowledge">0 Tokens</span>
                 <div class="control-hint">Hochgeladene PDFs, Texte, Tabellen</div>
             </div>
 
             <div class="control-group">
                 <label>Bisheriger Chat-Verlauf</label>
-                <input type="range" id="sliderHistory" min="0" max="100000" value="0" step="1000">
+                <input type="range" id="sliderHistory" min="0" max="200000" value="0" step="1000">
                 <span class="range-value" id="valHistory">0 Tokens</span>
                 <div class="control-hint">Alle bisherigen Nachrichten in dieser Sitzung</div>
             </div>
 
             <div class="control-group">
-                <label>Deine aktuelle Nachricht</label>
+                <label>Ihre aktuelle Nachricht</label>
                 <input type="range" id="sliderUser" min="0" max="10000" value="100" step="50">
                 <span class="range-value" id="valUser">100 Tokens</span>
-                <div class="control-hint">Das was du gerade schreibst</div>
+                <div class="control-hint">Das, was Sie gerade schreiben</div>
             </div>
 
             <button class="btn-reset" id="btnResetBucket">Zurücksetzen</button>
@@ -159,7 +198,7 @@
         <h3>Was ist ein Token?</h3>
         <div class="token-demo">
             <div class="token-input">
-                <textarea id="tokenInput" placeholder="Schreibe hier etwas...">Künstliche Intelligenz verändert die Arbeitswelt.</textarea>
+                <textarea id="tokenInput" placeholder="Schreiben Sie hier etwas...">Künstliche Intelligenz verändert die Arbeitswelt.</textarea>
             </div>
             <div class="token-output">
                 <div class="token-chips" id="tokenChips"></div>
@@ -170,15 +209,15 @@
         </div>
         <div class="token-facts">
             <div class="fact">
-                <span class="fact-icon">🇩🇪</span>
-                <span>Deutsch braucht <strong>~30% mehr Tokens</strong> als Englisch</span>
+                <span class="fact-icon"><svg class="icon"><use href="#i-languages"/></svg></span>
+                <span>Deutsch braucht <strong>rund 30% mehr Tokens</strong> als Englisch</span>
             </div>
             <div class="fact">
-                <span class="fact-icon">📐</span>
+                <span class="fact-icon"><svg class="icon"><use href="#i-ruler"/></svg></span>
                 <span>1 Token ≈ 0,75 Wörter (EN) / ≈ 0,5 Wörter (DE)</span>
             </div>
             <div class="fact">
-                <span class="fact-icon">💰</span>
+                <span class="fact-icon"><svg class="icon"><use href="#i-coins"/></svg></span>
                 <span>Mehr Tokens = höhere Kosten + schneller am Limit</span>
             </div>
         </div>
@@ -192,56 +231,56 @@
                 <div class="timeline-year">2022</div>
                 <div class="timeline-bar" style="width: 2%"></div>
                 <div class="timeline-info">
-                    <strong>GPT-3.5</strong> — 4K Tokens
+                    <strong>GPT-3.5</strong>: 4K Tokens
                     <span class="timeline-analog">≈ 3 Seiten Text</span>
                 </div>
             </div>
             <div class="timeline-entry" data-year="2023">
                 <div class="timeline-year">2023</div>
-                <div class="timeline-bar" style="width: 8%"></div>
+                <div class="timeline-bar" style="width: 5%"></div>
                 <div class="timeline-info">
-                    <strong>GPT-4</strong> — 32K Tokens
+                    <strong>GPT-4</strong>: 32K Tokens
                     <span class="timeline-analog">≈ 25 Seiten</span>
                 </div>
             </div>
             <div class="timeline-entry" data-year="2023b">
                 <div class="timeline-year">2023</div>
-                <div class="timeline-bar" style="width: 13%"></div>
+                <div class="timeline-bar" style="width: 12%"></div>
                 <div class="timeline-info">
-                    <strong>Claude 2</strong> — 100K Tokens
+                    <strong>Claude 2</strong>: 100K Tokens
                     <span class="timeline-analog">≈ ein kurzes Buch</span>
                 </div>
             </div>
             <div class="timeline-entry" data-year="2024">
                 <div class="timeline-year">2024</div>
-                <div class="timeline-bar" style="width: 16%"></div>
+                <div class="timeline-bar" style="width: 18%"></div>
                 <div class="timeline-info">
-                    <strong>GPT-4o / Claude 3</strong> — 128–200K
+                    <strong>GPT-4o / Claude 3</strong>: 128K bis 200K
                     <span class="timeline-analog">≈ ein Buch</span>
                 </div>
             </div>
             <div class="timeline-entry" data-year="2024b">
                 <div class="timeline-year">2024</div>
-                <div class="timeline-bar" style="width: 50%"></div>
+                <div class="timeline-bar" style="width: 70%"></div>
                 <div class="timeline-info">
-                    <strong>Gemini 1.5</strong> — 1M Tokens
+                    <strong>Gemini 1.5</strong>: 1M Tokens
                     <span class="timeline-analog">≈ 8 Bücher</span>
                 </div>
             </div>
             <div class="timeline-entry" data-year="2025">
                 <div class="timeline-year">2025</div>
-                <div class="timeline-bar" style="width: 50%"></div>
+                <div class="timeline-bar" style="width: 70%"></div>
                 <div class="timeline-info">
-                    <strong>Gemini 2.0 / Claude Sonnet 4</strong> — 1M–2M / 200K
-                    <span class="timeline-analog">≈ 8–15 Bücher (Gemini) / ≈ 1 Buch (Claude)</span>
+                    <strong>GPT-4.1 / Gemini 2.5 / Claude Sonnet 4</strong>: 1M
+                    <span class="timeline-analog">1M erreichen jetzt auch OpenAI und Anthropic (via API)</span>
                 </div>
             </div>
             <div class="timeline-entry highlight" data-year="2026">
                 <div class="timeline-year">2026</div>
                 <div class="timeline-bar" style="width: 100%"></div>
                 <div class="timeline-info">
-                    <strong>GPT-4.1 / Gemini 2.5 Pro / Claude Opus 4.6</strong>
-                    <span class="timeline-analog">Bis zu 2M Tokens — GPT-4.1 erstmals 1M via API!</span>
+                    <strong>GPT-5.6 / Gemini 3 / Claude Opus 4.8</strong>
+                    <span class="timeline-analog">1M Tokens ist der neue Standard der Top-Modelle, 1,5M angekündigt</span>
                 </div>
             </div>
         </div>
@@ -249,12 +288,12 @@
 </section>
 
 <!-- ============================================ -->
-<!-- TAB 2: DIE SINNE — Multimodal               -->
+<!-- TAB 2: DIE SINNE, Multimodal                 -->
 <!-- ============================================ -->
 <section class="tab-content" id="tab-multimodal">
     <div class="section-header">
         <h1>Die Sinne der KI</h1>
-        <p class="section-intro">Moderne KI kann nicht nur Text — sie versteht Bilder, liest PDFs und hört Sprache. Aber: <strong>Alles wird zu Tokens</strong>. Und alles kostet Platz im Kontextfenster.</p>
+        <p class="section-intro">Moderne KI kann nicht nur Text: Sie versteht Bilder, liest PDFs und hört Sprache. Aber: <strong>Alles wird zu Tokens</strong>. Und alles kostet Platz im Kontextfenster.</p>
     </div>
 
     <!-- Multimodal Token Cost -->
@@ -262,42 +301,42 @@
         <h3>Was kostet wie viel Kontext?</h3>
         <div class="cost-grid">
             <div class="cost-card" data-type="text">
-                <div class="cost-icon">📝</div>
+                <div class="cost-icon"><svg class="icon"><use href="#i-file-text"/></svg></div>
                 <div class="cost-label">Text</div>
                 <div class="cost-example">"Hallo, wie geht's?"</div>
                 <div class="cost-tokens">~5 Tokens</div>
                 <div class="cost-bar"><div class="cost-fill" style="width: 1%"></div></div>
             </div>
             <div class="cost-card" data-type="prompt">
-                <div class="cost-icon">💬</div>
+                <div class="cost-icon"><svg class="icon"><use href="#i-message"/></svg></div>
                 <div class="cost-label">Langer Prompt</div>
                 <div class="cost-example">500 Wörter Anweisung</div>
                 <div class="cost-tokens">~750 Tokens</div>
                 <div class="cost-bar"><div class="cost-fill" style="width: 8%"></div></div>
             </div>
             <div class="cost-card" data-type="image">
-                <div class="cost-icon">🖼️</div>
+                <div class="cost-icon"><svg class="icon"><use href="#i-image"/></svg></div>
                 <div class="cost-label">Ein Foto</div>
                 <div class="cost-example">Smartphone-Bild (1024px)</div>
                 <div class="cost-tokens">~1.500 Tokens</div>
                 <div class="cost-bar"><div class="cost-fill" style="width: 15%"></div></div>
             </div>
             <div class="cost-card" data-type="pdf">
-                <div class="cost-icon">📄</div>
+                <div class="cost-icon"><svg class="icon"><use href="#i-file-text"/></svg></div>
                 <div class="cost-label">PDF-Dokument</div>
                 <div class="cost-example">10-seitiges Dokument</div>
                 <div class="cost-tokens">~8.000 Tokens</div>
                 <div class="cost-bar"><div class="cost-fill" style="width: 40%"></div></div>
             </div>
             <div class="cost-card" data-type="book">
-                <div class="cost-icon">📚</div>
+                <div class="cost-icon"><svg class="icon"><use href="#i-book"/></svg></div>
                 <div class="cost-label">Ganzes Buch</div>
                 <div class="cost-example">~300 Seiten</div>
                 <div class="cost-tokens">~120.000 Tokens</div>
                 <div class="cost-bar"><div class="cost-fill" style="width: 95%"></div></div>
             </div>
             <div class="cost-card" data-type="image-hd">
-                <div class="cost-icon">📸</div>
+                <div class="cost-icon"><svg class="icon"><use href="#i-camera"/></svg></div>
                 <div class="cost-label">HD-Foto (hochauflösend)</div>
                 <div class="cost-example">4K-Bild, detailliert</div>
                 <div class="cost-tokens">~5.000 Tokens</div>
@@ -308,11 +347,11 @@
 
     <!-- Aha Moment -->
     <div class="aha-box">
-        <div class="aha-icon">💡</div>
+        <div class="aha-icon"><svg class="icon"><use href="#i-bulb"/></svg></div>
         <div class="aha-content">
-            <strong>Aha-Moment:</strong> Wenn ihr eurem Custom GPT eine 50-seitige PDF als Knowledge gebt, sind schon ~40.000 Tokens verbraucht — <em>bevor der erste Chat beginnt!</em>
+            <strong>Aha-Moment:</strong> Wenn Sie Ihrem Custom GPT eine 50-seitige PDF als Knowledge geben, sind das rund 40.000 Tokens, <em>bevor der erste Chat beginnt!</em>
             <br><br>
-            Das heißt: Bei GPT-4o (128K) sind schon <strong>31%</strong> des Kontextfensters weg.
+            Im Standard-Modus der ChatGPT-Business-App (32.000 Tokens Kontext) passt das Dokument nicht einmal vollständig hinein: Die KI arbeitet dann mit Ausschnitten, statt alles auf einmal zu lesen.
         </div>
     </div>
 
@@ -332,50 +371,50 @@
             <tbody>
                 <tr>
                     <td>Text verstehen</td>
-                    <td>✅</td><td>✅</td><td>✅</td><td>✅</td>
+                    <td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td>
                 </tr>
                 <tr>
                     <td>Bilder analysieren</td>
-                    <td>✅</td><td>✅</td><td>✅</td><td>✅</td>
+                    <td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td>
                 </tr>
                 <tr>
                     <td>PDFs lesen</td>
-                    <td>✅</td><td>✅</td><td>✅</td><td>✅</td>
+                    <td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td>
                 </tr>
                 <tr>
                     <td>Audio/Sprache</td>
-                    <td>✅</td><td>✅</td><td>❌</td><td>✅</td>
+                    <td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span> (Sprachmodus)</td><td><span class="mark yes">✓</span></td>
                 </tr>
                 <tr>
                     <td>Video analysieren</td>
-                    <td>❌</td><td>❌</td><td>❌</td><td>✅</td>
+                    <td><span class="mark no">✗</span></td><td><span class="mark no">✗</span></td><td><span class="mark no">✗</span></td><td><span class="mark yes">✓</span></td>
                 </tr>
                 <tr>
                     <td>Bilder erzeugen</td>
-                    <td>✅ (Designer)</td><td>✅ (DALL-E)</td><td>❌</td><td>✅ (Imagen)</td>
+                    <td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span> (GPT Image)</td><td><span class="mark no">✗</span></td><td><span class="mark yes">✓</span> (Nano Banana)</td>
                 </tr>
                 <tr>
                     <td>Code ausführen</td>
-                    <td>❌</td><td>✅</td><td>❌*</td><td>✅</td>
+                    <td>Eingeschränkt</td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td>
                 </tr>
                 <tr>
                     <td>Dateien erzeugen</td>
-                    <td>Eingeschränkt</td><td>✅</td><td>✅</td><td>✅</td>
+                    <td>Eingeschränkt</td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td><td><span class="mark yes">✓</span></td>
                 </tr>
             </tbody>
         </table>
-        <p class="table-note">* Claude kann Code schreiben, aber nicht direkt ausführen (außer in Claude Code / Artifacts)</p>
+        <p class="table-note">Stand: Juli 2026. Der Funktionsumfang ändert sich laufend, im Zweifel die aktuelle Anbieter-Dokumentation prüfen.</p>
     </div>
 
     <!-- Interactive: Image vs Text -->
     <div class="multimodal-demo">
         <h3>Experiment: Bild vs. Text</h3>
-        <p>Stellt euch vor, ihr wollt der KI eine Rechnung zeigen. Was ist effizienter?</p>
+        <p>Stellen Sie sich vor, Sie wollen der KI eine Rechnung zeigen. Was ist effizienter?</p>
         <div class="demo-comparison">
             <div class="demo-option">
                 <div class="demo-title">Option A: Foto hochladen</div>
                 <div class="demo-visual">
-                    <div class="demo-icon">📸</div>
+                    <div class="demo-icon"><svg class="icon"><use href="#i-camera"/></svg></div>
                     <div class="demo-arrow">→</div>
                     <div class="demo-tokens-display">~1.500 Tokens</div>
                 </div>
@@ -385,7 +424,7 @@
             <div class="demo-option winner">
                 <div class="demo-title">Option B: Text rauskopieren</div>
                 <div class="demo-visual">
-                    <div class="demo-icon">📋</div>
+                    <div class="demo-icon"><svg class="icon"><use href="#i-clipboard"/></svg></div>
                     <div class="demo-arrow">→</div>
                     <div class="demo-tokens-display">~200 Tokens</div>
                 </div>
@@ -393,16 +432,16 @@
             </div>
         </div>
         <div class="aha-box small">
-            <div class="aha-icon">💡</div>
+            <div class="aha-icon"><svg class="icon"><use href="#i-bulb"/></svg></div>
             <div class="aha-content">
-                <strong>Merksatz:</strong> Text ist fast immer effizienter als Bilder — außer ihr braucht die visuelle Information (z.B. "Was siehst du auf diesem Foto?").
+                <strong>Merksatz:</strong> Text ist fast immer effizienter als Bilder, außer Sie brauchen die visuelle Information (z. B. "Was siehst du auf diesem Foto?").
             </div>
         </div>
     </div>
 </section>
 
 <!-- ============================================ -->
-<!-- TAB 3: DAS GEDÄCHTNIS — Context vs. Memory  -->
+<!-- TAB 3: DAS GEDÄCHTNIS, Context vs. Memory    -->
 <!-- ============================================ -->
 <section class="tab-content" id="tab-memory">
     <div class="section-header">
@@ -423,12 +462,12 @@
             </div>
             <div class="chat-controls">
                 <button class="btn-chat" id="btnAddMessage">Nächste Nachricht senden</button>
-                <button class="btn-chat secondary" id="btnAutoPlay">▶️ Auto-Play</button>
-                <button class="btn-chat secondary" id="btnResetChat">↺ Zurücksetzen</button>
+                <button class="btn-chat secondary" id="btnAutoPlay">Auto-Play</button>
+                <button class="btn-chat secondary" id="btnResetChat">Zurücksetzen</button>
             </div>
         </div>
         <div class="memory-explanation" id="memoryExplanation">
-            <p>Klicke auf "Nächste Nachricht senden" und beobachte was passiert, wenn der Kontext voll wird...</p>
+            <p>Klicken Sie auf "Nächste Nachricht senden" und beobachten Sie, was passiert, wenn der Kontext voll wird...</p>
         </div>
     </div>
 
@@ -438,38 +477,38 @@
         <div class="memory-grid">
             <div class="memory-card">
                 <div class="memory-card-header session">
-                    <span class="memory-card-icon">💬</span>
+                    <span class="memory-card-icon"><svg class="icon"><use href="#i-message"/></svg></span>
                     <h4>Sitzungs-Kontext</h4>
                 </div>
                 <div class="memory-card-body">
-                    <p><strong>Was:</strong> Alles was in DIESEM Chat gesagt wurde</p>
+                    <p><strong>Was:</strong> Alles, was in DIESEM Chat gesagt wurde</p>
                     <p><strong>Dauer:</strong> Nur diese Sitzung</p>
                     <p><strong>Limit:</strong> Durch Kontextfenster begrenzt</p>
-                    <div class="memory-analogy">"Wie ein Gespräch — wenn ihr geht, vergisst die KI alles"</div>
+                    <div class="memory-analogy">"Wie ein Gespräch: Wenn Sie gehen, vergisst die KI alles"</div>
                 </div>
             </div>
             <div class="memory-card">
                 <div class="memory-card-header knowledge">
-                    <span class="memory-card-icon">📚</span>
+                    <span class="memory-card-icon"><svg class="icon"><use href="#i-book"/></svg></span>
                     <h4>Knowledge / Wissen</h4>
                 </div>
                 <div class="memory-card-body">
-                    <p><strong>Was:</strong> Dateien die ihr im Agenten hinterlegt</p>
+                    <p><strong>Was:</strong> Dateien, die Sie im Agenten hinterlegen</p>
                     <p><strong>Dauer:</strong> Dauerhaft (im Agenten gespeichert)</p>
                     <p><strong>Limit:</strong> Frisst Platz im Kontextfenster!</p>
-                    <div class="memory-analogy">"Wie ein Nachschlagewerk auf dem Schreibtisch — immer da, braucht aber Platz"</div>
+                    <div class="memory-analogy">"Wie ein Nachschlagewerk auf dem Schreibtisch: immer da, braucht aber Platz"</div>
                 </div>
             </div>
             <div class="memory-card">
                 <div class="memory-card-header persistent">
-                    <span class="memory-card-icon">🧠</span>
+                    <span class="memory-card-icon"><svg class="icon"><use href="#i-brain"/></svg></span>
                     <h4>Persistenter Speicher</h4>
                 </div>
                 <div class="memory-card-body">
-                    <p><strong>Was:</strong> Dinge die sich die KI über Sitzungen hinweg merkt</p>
+                    <p><strong>Was:</strong> Dinge, die sich die KI über Sitzungen hinweg merkt</p>
                     <p><strong>Dauer:</strong> Dauerhaft</p>
-                    <p><strong>Wo:</strong> ChatGPT Memory, Claude Projects, Copilot Notebook</p>
-                    <div class="memory-analogy">"Wie ein Notizbuch — die KI schreibt sich Dinge auf und liest sie beim nächsten Chat"</div>
+                    <p><strong>Wo:</strong> ChatGPT Memory, Claude Memory, Copilot Memory</p>
+                    <div class="memory-analogy">"Wie ein Notizbuch: Die KI schreibt sich Dinge auf und liest sie beim nächsten Chat"</div>
                 </div>
             </div>
         </div>
@@ -480,46 +519,46 @@
         <h3>Verbindung zum Prompting</h3>
         <div class="prompt-comparison">
             <div class="prompt-example bad">
-                <div class="prompt-label">❌ Verschwendet Kontext</div>
+                <div class="prompt-label"><span class="mark no">✗</span> Verschwendet Kontext</div>
                 <div class="prompt-text">
                     "Hallo liebe KI, ich hoffe es geht dir gut. Ich hätte da mal eine Frage, und zwar geht es um Folgendes: Ich arbeite gerade an einer Bewerbung und frage mich, ob du mir vielleicht dabei helfen könntest, mein Anschreiben zu verbessern? Es wäre wirklich super nett wenn du dir das mal anschauen könntest. Also hier ist mein Text..."
                 </div>
                 <div class="prompt-tokens">~85 Tokens für die Frage allein</div>
             </div>
             <div class="prompt-example good">
-                <div class="prompt-label">✅ Effizient</div>
+                <div class="prompt-label"><span class="mark yes">✓</span> Effizient</div>
                 <div class="prompt-text">
                     "Verbessere mein Anschreiben für eine Stelle als Projektmanager. Fokus: Klarere Struktur, stärkere Einleitung. Hier der Text:"
                 </div>
-                <div class="prompt-tokens">~25 Tokens — gleiche Info, 70% weniger!</div>
+                <div class="prompt-tokens">~25 Tokens, gleiche Info, 70% weniger!</div>
             </div>
         </div>
         <div class="aha-box">
-            <div class="aha-icon">💡</div>
+            <div class="aha-icon"><svg class="icon"><use href="#i-bulb"/></svg></div>
             <div class="aha-content">
-                <strong>Merksatz:</strong> Gutes Prompting ist auch gutes Kontext-Management. Je präziser eure Anweisung, desto mehr Platz bleibt für die eigentliche Arbeit.
+                <strong>Merksatz:</strong> Gutes Prompting ist auch gutes Kontext-Management. Je präziser Ihre Anweisung, desto mehr Platz bleibt für die eigentliche Arbeit.
             </div>
         </div>
     </div>
 
-    <!-- LUCA Link -->
+    <!-- Selbst testen -->
     <div class="luca-link">
-        <div class="luca-icon">🧪</div>
+        <div class="luca-icon"><svg class="icon"><use href="#i-flask"/></svg></div>
         <div class="luca-content">
-            <h4>Testet es selbst in LUCA!</h4>
-            <p>Öffnet LUCA und führt einen langen Chat. Beobachtet, wie sich die Antworten verändern, wenn der Kontext voller wird.</p>
-            <a href="https://luca-dev.hold-clarity.de/chat" target="_blank" class="btn-luca">LUCA öffnen →</a>
+            <h4>Testen Sie es selbst!</h4>
+            <p>Führen Sie in ChatGPT (Ihr Kurszugang) einen langen Chat und beobachten Sie, wie sich die Antworten verändern, wenn der Kontext voller wird. Alternative ohne Anmeldung: LUCA, unser eigenes Übungs-LLM mit Blick hinter die Kulissen.</p>
+            <a href="https://luca.hold-clarity.de/chat" target="_blank" rel="noopener" class="btn-luca">LUCA öffnen →</a>
         </div>
     </div>
 </section>
 
 <!-- ============================================ -->
-<!-- TAB 4: DIE ARME — APIs & Tools              -->
+<!-- TAB 4: DIE ARME, APIs & Tools                -->
 <!-- ============================================ -->
 <section class="tab-content" id="tab-apis">
     <div class="section-header">
         <h1>Die Arme der KI</h1>
-        <p class="section-intro">Euer Agent ist schlau — aber <strong>blind und taub</strong> gegenüber der Außenwelt. Er weiß nicht wie das Wetter ist, kennt keine aktuellen Nachrichten und kann keine E-Mails senden. <strong>APIs</strong> sind seine Arme, mit denen er nach draußen greift.</p>
+        <p class="section-intro">Ihr Agent ist schlau, aber <strong>blind und taub</strong> gegenüber der Außenwelt. Er weiß nicht, wie das Wetter ist, kennt keine aktuellen Nachrichten und kann keine E-Mails senden. <strong>APIs</strong> (Programmier-Schnittstellen) sind seine Arme, mit denen er nach draußen greift.</p>
     </div>
 
     <!-- Before/After -->
@@ -527,7 +566,7 @@
         <div class="api-state before">
             <div class="api-state-header">Ohne API-Anbindung</div>
             <div class="agent-box">
-                <div class="agent-icon">🤖</div>
+                <div class="agent-icon"><svg class="icon"><use href="#i-bot"/></svg></div>
                 <div class="agent-speech">"Ich kann dir leider nicht sagen wie das Wetter gerade ist. Ich habe keinen Zugriff auf aktuelle Daten."</div>
             </div>
             <div class="api-pipes">
@@ -549,7 +588,7 @@
         <div class="api-state after">
             <div class="api-state-header">Mit API-Anbindung</div>
             <div class="agent-box connected">
-                <div class="agent-icon">🤖</div>
+                <div class="agent-icon"><svg class="icon"><use href="#i-bot"/></svg></div>
                 <div class="agent-speech">"In Dresden sind es gerade 13°C bei klarem Himmel. Soll ich dir eine Erinnerung in den Kalender setzen?"</div>
             </div>
             <div class="api-pipes">
@@ -586,10 +625,10 @@
 
     <!-- API Flow Visualization -->
     <div class="api-flow">
-        <h3>Wie funktioniert eine API? — Die Restaurant-Metapher</h3>
+        <h3>Wie funktioniert eine API? Die Restaurant-Metapher</h3>
         <div class="restaurant-flow">
             <div class="restaurant-actor">
-                <div class="actor-icon">👤</div>
+                <div class="actor-icon"><svg class="icon"><use href="#i-user"/></svg></div>
                 <div class="actor-label">DU (App)</div>
                 <div class="actor-speech">"Wie ist das Wetter?"</div>
             </div>
@@ -600,7 +639,7 @@
                 </div>
             </div>
             <div class="restaurant-actor">
-                <div class="actor-icon">🤵</div>
+                <div class="actor-icon"><svg class="icon"><use href="#i-bell"/></svg></div>
                 <div class="actor-label">KELLNER (API)</div>
                 <div class="actor-speech">"Moment, ich frage!"</div>
             </div>
@@ -611,7 +650,7 @@
                 </div>
             </div>
             <div class="restaurant-actor">
-                <div class="actor-icon">👨‍🍳</div>
+                <div class="actor-icon"><svg class="icon"><use href="#i-chef"/></svg></div>
                 <div class="actor-label">KÜCHE (Server)</div>
                 <div class="actor-speech">{ "temp": "13°C" }</div>
             </div>
@@ -621,33 +660,33 @@
     <!-- Interactive: Connect/Disconnect -->
     <div class="api-interactive">
         <h3>Experiment: Verbindungen aktivieren</h3>
-        <p>Klicke auf die Schalter und beobachte, wie sich die Fähigkeiten des Agenten verändern:</p>
+        <p>Klicken Sie auf die Schalter und beobachten Sie, wie sich die Fähigkeiten des Agenten verändern:</p>
         <div class="api-toggles">
             <div class="api-toggle-row">
                 <label class="toggle-label">
                     <input type="checkbox" class="api-toggle" data-api="weather" checked>
                     <span class="toggle-switch"></span>
-                    <span class="toggle-text">🌤 Wetter-API</span>
+                    <span class="toggle-text"><svg class="icon"><use href="#i-cloud-sun"/></svg> Wetter-API</span>
                 </label>
                 <label class="toggle-label">
                     <input type="checkbox" class="api-toggle" data-api="email">
                     <span class="toggle-switch"></span>
-                    <span class="toggle-text">📧 E-Mail (SMTP)</span>
+                    <span class="toggle-text"><svg class="icon"><use href="#i-mail"/></svg> E-Mail (SMTP)</span>
                 </label>
                 <label class="toggle-label">
                     <input type="checkbox" class="api-toggle" data-api="calendar">
                     <span class="toggle-switch"></span>
-                    <span class="toggle-text">📅 Google Kalender</span>
+                    <span class="toggle-text"><svg class="icon"><use href="#i-calendar"/></svg> Google Kalender</span>
                 </label>
                 <label class="toggle-label">
                     <input type="checkbox" class="api-toggle" data-api="search">
                     <span class="toggle-switch"></span>
-                    <span class="toggle-text">🔍 Web-Suche</span>
+                    <span class="toggle-text"><svg class="icon"><use href="#i-search"/></svg> Web-Suche</span>
                 </label>
             </div>
         </div>
         <div class="agent-capabilities" id="agentCapabilities">
-            <div class="capability-header">🤖 Euer Agent kann jetzt:</div>
+            <div class="capability-header"><svg class="icon"><use href="#i-bot"/></svg> Ihr Agent kann jetzt:</div>
             <ul id="capabilityList">
                 <li class="capability active" data-api="weather">Aktuelle Wetterdaten abrufen</li>
                 <li class="capability" data-api="email">E-Mails senden und empfangen</li>
@@ -673,7 +712,7 @@
                         <li>Power Automate Konnektoren</li>
                         <li>Kein Code nötig</li>
                     </ul>
-                    <div class="connection-difficulty">Einstieg: ⭐</div>
+                    <div class="connection-difficulty">Einstieg: leicht</div>
                 </div>
             </div>
             <div class="connection-card">
@@ -688,22 +727,22 @@
                         <li>Jede REST-API anbindbar</li>
                         <li>Technischer, aber flexibler</li>
                     </ul>
-                    <div class="connection-difficulty">Einstieg: ⭐⭐</div>
+                    <div class="connection-difficulty">Einstieg: mittel</div>
                 </div>
             </div>
             <div class="connection-card">
                 <div class="connection-header n8n-bg">
-                    <span>n8n / Make</span>
+                    <span>n8n / Make / UiPath</span>
                 </div>
                 <div class="connection-body">
                     <h4>Workflow-Automation</h4>
                     <p>Visuelle Verbindung ohne Code</p>
                     <ul>
-                        <li>Drag & Drop Workflows</li>
+                        <li>Drag &amp; Drop Workflows</li>
                         <li>Hunderte Integrationen</li>
                         <li>Trigger-basiert (automatisch)</li>
                     </ul>
-                    <div class="connection-difficulty">Einstieg: ⭐⭐</div>
+                    <div class="connection-difficulty">Einstieg: mittel</div>
                 </div>
             </div>
         </div>
@@ -711,12 +750,12 @@
 </section>
 
 <!-- ============================================ -->
-<!-- TAB 5: DAS NERVENSYSTEM — MCP & Skills      -->
+<!-- TAB 5: DAS NERVENSYSTEM, MCP & Skills        -->
 <!-- ============================================ -->
 <section class="tab-content" id="tab-mcp">
     <div class="section-header">
         <h1>Das Nervensystem der KI</h1>
-        <p class="section-intro">APIs sind die Arme — aber jeder Arm braucht einen eigenen Adapter. <strong>MCP</strong> (Model Context Protocol) ist der universelle Stecker: <em>Ein Standard, alle Tools.</em></p>
+        <p class="section-intro">APIs sind die Arme, aber jeder Arm braucht einen eigenen Adapter. <strong>MCP</strong> (Model Context Protocol) ist der universelle Stecker: <em>Ein Standard, alle Tools.</em></p>
     </div>
 
     <!-- The Problem -->
@@ -725,61 +764,61 @@
         <div class="chaos-grid-layout">
             <div class="chaos-tool-item">
                 <span class="chaos-adapter-tag" style="background:#e74c3c">Adapter A</span>
-                <span>📧 Gmail</span>
+                <span><svg class="icon"><use href="#i-mail"/></svg> Gmail</span>
             </div>
             <div class="chaos-tool-item">
                 <span class="chaos-adapter-tag" style="background:#3498db">Adapter B</span>
-                <span>📅 Kalender</span>
+                <span><svg class="icon"><use href="#i-calendar"/></svg> Kalender</span>
             </div>
             <div class="chaos-tool-item">
                 <span class="chaos-adapter-tag" style="background:#2ecc71">Adapter C</span>
-                <span>📁 Dateien</span>
+                <span><svg class="icon"><use href="#i-folder"/></svg> Dateien</span>
             </div>
             <div class="chaos-center-item">
-                <div class="chaos-agent-emoji">🤖</div>
+                <div class="chaos-agent-emoji"><svg class="icon"><use href="#i-bot"/></svg></div>
                 <span>LLM</span>
             </div>
             <div class="chaos-tool-item">
                 <span class="chaos-adapter-tag" style="background:#9b59b6">Adapter D</span>
-                <span>🔍 Suche</span>
+                <span><svg class="icon"><use href="#i-search"/></svg> Suche</span>
             </div>
             <div class="chaos-tool-item">
                 <span class="chaos-adapter-tag" style="background:#e67e22">Adapter E</span>
-                <span>💾 Datenbank</span>
+                <span><svg class="icon"><use href="#i-database"/></svg> Datenbank</span>
             </div>
             <div class="chaos-tool-item">
                 <span class="chaos-adapter-tag" style="background:#1abc9c">Adapter F</span>
-                <span>🌐 API</span>
+                <span><svg class="icon"><use href="#i-globe"/></svg> API</span>
             </div>
         </div>
-        <p class="chaos-caption-text">Jeder Adapter spricht eine andere Sprache — kein Standard! 🔴</p>
+        <p class="chaos-caption-text">Jeder Adapter spricht eine andere Sprache, kein Standard!</p>
     </div>
 
     <!-- The Solution -->
     <div class="mcp-solution">
-        <h3>Die Lösung: MCP — Eine gemeinsame Sprache für alle Tools</h3>
+        <h3>Die Lösung: MCP, eine gemeinsame Sprache für alle Tools</h3>
         <div class="mcp-visual">
             <div class="mcp-left">
-                <div class="mcp-agent">🤖 LLM</div>
+                <div class="mcp-agent"><svg class="icon"><use href="#i-bot"/></svg> LLM</div>
             </div>
             <div class="mcp-center">
                 <div class="mcp-plug">
-                    <div class="mcp-plug-icon">🔌</div>
+                    <div class="mcp-plug-icon"><svg class="icon"><use href="#i-plug"/></svg></div>
                     <div class="mcp-plug-label">MCP</div>
                 </div>
             </div>
             <div class="mcp-right">
-                <div class="mcp-tool">📧 Gmail</div>
-                <div class="mcp-tool">📅 Kalender</div>
-                <div class="mcp-tool">📁 Dateien</div>
-                <div class="mcp-tool">🔍 Suche</div>
-                <div class="mcp-tool">💾 Datenbank</div>
-                <div class="mcp-tool">🌐 Jede API</div>
+                <div class="mcp-tool"><svg class="icon"><use href="#i-mail"/></svg> Gmail</div>
+                <div class="mcp-tool"><svg class="icon"><use href="#i-calendar"/></svg> Kalender</div>
+                <div class="mcp-tool"><svg class="icon"><use href="#i-folder"/></svg> Dateien</div>
+                <div class="mcp-tool"><svg class="icon"><use href="#i-search"/></svg> Suche</div>
+                <div class="mcp-tool"><svg class="icon"><use href="#i-database"/></svg> Datenbank</div>
+                <div class="mcp-tool"><svg class="icon"><use href="#i-globe"/></svg> Jede API</div>
             </div>
         </div>
-        <p class="mcp-caption-text">Jeder MCP-Server beschreibt sich selbst — das LLM versteht automatisch, was das Tool kann und wann es es nutzen soll.</p>
+        <p class="mcp-caption-text">Jeder MCP-Server beschreibt sich selbst: Das LLM versteht automatisch, was das Tool kann und wann es es nutzen soll.</p>
         <div class="mcp-analogy">
-            <strong>Analogie:</strong> MCP ist wie USB-C — ein Stecker für alles. Vorher brauchte jedes Gerät sein eigenes Kabel (Lightning, Micro-USB, Mini-USB...). MCP macht das Gleiche für KI-Tools.
+            <strong>Analogie:</strong> MCP ist wie USB-C, ein Stecker für alles. Vorher brauchte jedes Gerät sein eigenes Kabel (Lightning, Micro-USB, Mini-USB...). MCP macht das Gleiche für KI-Tools.
         </div>
     </div>
 
@@ -789,7 +828,7 @@
         <div class="mcp-compare-grid">
             <div class="mcp-compare-card classic">
                 <div class="mcp-compare-header">
-                    <span class="mcp-compare-icon">🔧</span>
+                    <span class="mcp-compare-icon"><svg class="icon"><use href="#i-wrench"/></svg></span>
                     <span>Klassische API</span>
                 </div>
                 <p>Der <strong>Entwickler</strong> definiert fest, welches Tool wann genutzt wird. Jede Verbindung ist hart kodiert.</p>
@@ -798,10 +837,10 @@
             <div class="mcp-compare-vs">vs.</div>
             <div class="mcp-compare-card mcp-card">
                 <div class="mcp-compare-header">
-                    <span class="mcp-compare-icon">🔌</span>
+                    <span class="mcp-compare-icon"><svg class="icon"><use href="#i-plug"/></svg></span>
                     <span>MCP</span>
                 </div>
-                <p>Das <strong>LLM entscheidet selbst</strong> zur Laufzeit — weil das Tool seine Fähigkeiten aktiv kommuniziert.</p>
+                <p>Das <strong>LLM entscheidet selbst</strong> zur Laufzeit, weil das Tool seine Fähigkeiten aktiv kommuniziert.</p>
                 <div class="mcp-compare-tag mcp-tag">Dynamisch</div>
             </div>
         </div>
@@ -809,8 +848,8 @@
 
     <!-- Skills -->
     <div class="skills-section">
-        <h3>Skills — Fertige Fähigkeiten</h3>
-        <p>Ein <strong>Skill</strong> ist ein fertiges Paket das der KI eine neue Fähigkeit gibt. Statt selbst eine API anzubinden, installiert man einen Skill — wie eine App auf dem Smartphone.</p>
+        <h3>Skills: Fertige Fähigkeiten</h3>
+        <p>Ein <strong>Skill</strong> ist ein fertiges Paket, das der KI eine neue Fähigkeit gibt. Statt selbst eine API anzubinden, installiert man einen Skill, wie eine App auf dem Smartphone.</p>
         <div class="skills-demo">
             <div class="skill-card" data-skill="none">
                 <div class="skill-header">
@@ -834,18 +873,18 @@
         </div>
     </div>
 
-    <!-- Bridge to n8n -->
+    <!-- Bridge to KI-Agenten -->
     <div class="bridge-n8n">
-        <div class="bridge-icon">🔮</div>
+        <div class="bridge-icon"><svg class="icon"><use href="#i-rocket"/></svg></div>
         <div class="bridge-content">
-            <h4>Vorschau: In Woche 3 baut ihr das selbst</h4>
-            <p>Mit <strong>n8n</strong> werdet ihr eigene Workflows bauen, die genau diese Verbindungen herstellen: KI + APIs + Trigger = euer eigener Agent der automatisch handelt.</p>
+            <h4>Ausblick: Exkurs KI-Agenten (Woche 2)</h4>
+            <p>Wenn eine KI solche Werkzeuge selbstständig nutzt, um mehrschrittige Aufgaben zu erledigen, sprechen wir von <strong>KI-Agenten</strong>. Im Kurs klären wir, welche neuen Risiken dadurch entstehen (Autonomie, Tool-Zugriff) und warum der EU AI Act bei Hochrisiko-Systemen menschliche Aufsicht verlangt (Art. 14 EU AI Act).</p>
             <div class="bridge-flow">
-                <span class="bridge-step">Trigger</span>
+                <span class="bridge-step">Auftrag</span>
                 <span class="bridge-connector">→</span>
-                <span class="bridge-step">KI verarbeitet</span>
+                <span class="bridge-step">KI plant &amp; handelt</span>
                 <span class="bridge-connector">→</span>
-                <span class="bridge-step">Aktion ausführen</span>
+                <span class="bridge-step">Mensch prüft &amp; verantwortet</span>
             </div>
         </div>
     </div>
